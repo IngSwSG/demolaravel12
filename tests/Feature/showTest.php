@@ -6,7 +6,7 @@ use function Pest\Laravel\get;
 
 uses(RefreshDatabase::class);
 
-test('puede mostrar una tarea individual', function () {
+test('puedes mostrar una tarea individual', function () {
     $task = Task::factory()->create();
 
     $response = get("/tasks/{$task->id}");

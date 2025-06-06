@@ -1,32 +1,34 @@
 <?php
 
 namespace Tests\Feature;
-
-use Tests\TestCase;
 use App\Models\User;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class update extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
+test('a task can be updated successfully', function () {
+    // Crear un usuario y una tarea
+    $user = User::factory()->create();
+    $task = Task::factory()->create([
+        'name' => 'Tarea original',
+        'user_id' => $user->id,
+    ]);
 
-    public function it_updates_a_task_successfully()
-    {
-        $user = User::factory()->create();
-        $task = Task::factory()->create([
-            'name' => 'Old Name',
-            'user_id' => $user->id,
-        ]);
+    // Nuevos datos
+    $data = [
+        'name' => 'Tarea actualizada',
+    ];
 
-        $response = $this->put(route('tasks.update', $task), [
-            'name' => 'New Name',
-        ]);
-        $response->assertRedirect(route('tasks.index'));
-        $this->assertDatabaseHas('tasks', [
-            'id' => $task->id,
-            'name' => 'New Name',
-        ]);
-    }
-}
+    // Enviar petición PUT
+    $response = $this->put("/tasks/{$task->id}", $data);
+
+    // Verificar redirección
+    $response->assertRedirect(route('tasks.index'));
+
+    // Confirmar que se actualizó en la base de datos
+    $this->assertDatabaseHas('tasks', [
+        'id' => $task->id,
+        'name' => 'Tarea actualizada',
+    ]);
+});

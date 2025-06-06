@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class TaskControllerTest extends TestCase
+class update extends TestCase
 {
     use RefreshDatabase;
 

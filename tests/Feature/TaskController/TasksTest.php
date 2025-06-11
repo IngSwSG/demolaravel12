@@ -1,15 +1,21 @@
+<?
+
+
 use App\Models\Task;
 use App\Models\User;
 
-it('can toggle task status', function () {
+it('can update task status', function () {
     $user = User::factory()->create();
+
     $task = Task::factory()->create([
         'user_id' => $user->id,
-        'status' => false,
+        'status' => Task::STATUS_TODO,
     ]);
 
-    $response = $this->actingAs($user)->patch(route('tasks.toggleStatus', $task));
+    $response = $this->actingAs($user)->patch(route('tasks.updateStatus', $task), [
+        'status' => Task::STATUS_IN_PROGRESS,
+    ]);
 
     $response->assertRedirect(route('tasks.index'));
-    expect($task->fresh()->status)->toBeTrue();
+    expect($task->fresh()->status)->toBe(Task::STATUS_IN_PROGRESS);
 });

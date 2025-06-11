@@ -1,5 +1,4 @@
-<?
-
+<?php
 
 use App\Models\Task;
 use App\Models\User;
@@ -12,10 +11,11 @@ it('can update task status', function () {
         'status' => Task::STATUS_TODO,
     ]);
 
-    $response = $this->actingAs($user)->patch(route('tasks.updateStatus', $task), [
+    $response = $this->actingAs($user)->patch(route('tasks.status', $task), [
         'status' => Task::STATUS_IN_PROGRESS,
     ]);
 
     $response->assertRedirect(route('tasks.index'));
+
     expect($task->fresh()->status)->toBe(Task::STATUS_IN_PROGRESS);
 });

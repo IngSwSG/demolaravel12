@@ -16,4 +16,8 @@ class Task extends Model
     {
         return $this->belongsTo(User::class);
     }
+    protected $fillable = [
+    'name', 'user_id', 'completed'
+];
+
 }

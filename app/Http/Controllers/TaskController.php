@@ -80,4 +80,16 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('tasks.index');
     }
+
+public function complete(Request $request, $id)
+{
+    $task = Task::findOrFail($id);
+    $nuevoEstado = $request->input('state', 2);
+    $task->completed = $nuevoEstado;
+    $task->save();
+
+    return redirect()->route('tasks.index')->with('success', '¡Estado actualizado!');
+}
+
+
 }

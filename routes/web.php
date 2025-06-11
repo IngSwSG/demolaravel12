@@ -9,3 +9,4 @@ Route::get('/', function () {
 
 Route::resource('tasks', TaskController::class);
 
+Route::patch('/tasks/{id}/complete', [TaskController::class, 'complete'])->name('tasks.complete');

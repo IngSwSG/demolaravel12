@@ -16,5 +16,14 @@
         </select>
     </div>
 
+    <div>
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="to do" {{ $task->status === 'to do' ? 'selected' : '' }}>To Do</option>
+            <option value="in progress" {{ $task->status === 'in progress' ? 'selected' : '' }}>In Progress</option>
+            <option value="finished" {{ $task->status === 'finished' ? 'selected' : '' }}>Finished</option>
+        </select>
+    </div>
+
     <button type="submit" class="btn btn-primary">Update Task</button>
 </form>

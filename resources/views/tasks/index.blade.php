@@ -18,6 +18,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>User</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -27,6 +28,17 @@
                 <td>{{ $task->id }}</td>
                 <td>{{ $task->name }}</td>
                 <td>{{ $task->user->name }}</td>
+                <td>
+                    <form action="{{ route('tasks.status', $task->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('PATCH')
+                        <select name="status" onchange="this.form.submit()">
+                            <option value="to do" {{ $task->status === 'to do' ? 'selected' : '' }}>To Do</option>
+                            <option value="in progress" {{ $task->status === 'in progress' ? 'selected' : '' }}>In Progress</option>
+                            <option value="finished" {{ $task->status === 'finished' ? 'selected' : '' }}>Finished</option>
+                        </select>
+                    </form>
+                </td>
                 <td>
                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-info">View</a>
                     <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning">Edit</a>

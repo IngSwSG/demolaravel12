@@ -14,26 +14,29 @@ class Team extends Model
     protected $guarded = [];
     
     public function add($users)
-    {
+{
+    $countToAdd = ($users instanceof User) ? 1 : count($users);
+    $this->guardAgainstTooManyMembers($countToAdd);
 
-        $this->guardAgainstTooManyMembers();
-
-        if ($users instanceof User) {
-            return $this->users()->save($users);
-        }
-
-        $this->users()->saveMany($users);
+    if ($users instanceof User) {
+        return $this->users()->save($users);
     }
+
+    $this->users()->saveMany($users);
+}
+
 
     public function users()
     {
         return $this->hasMany(User::class);
     }
 
-    protected function guardAgainstTooManyMembers()
-    {
-        if ($this->users()->count() >= $this->size) {
-            throw new Exception();
-        }
+   protected function guardAgainstTooManyMembers($countToAdd = 1)
+{
+    $currentCount = $this->users()->count();
+    if ($currentCount + $countToAdd > $this->size) {
+        throw new Exception();
     }
+}
+
 }

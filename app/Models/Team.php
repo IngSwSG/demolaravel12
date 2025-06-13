@@ -32,7 +32,7 @@ class Team extends Model
             return $this->users()->save($users);
         }
 
-        // Si es una colección o array de usuarios
+    
         $usersCount = is_countable($users) ? count($users) : $users->count();
         $currentCount = $this->users()->count();
 

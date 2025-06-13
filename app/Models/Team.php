@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Exception;
@@ -35,7 +34,6 @@ class Team extends Model
     {
         $currentCount = $this->users()->count();
         $futureCount = $currentCount + $newUsersCount;
-
         if ($futureCount > $this->size) {
             throw new Exception("No se pueden agregar {$newUsersCount} usuarios. El equipo tiene límite de {$this->size}, actualmente tiene {$currentCount}");
         }

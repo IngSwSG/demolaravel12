@@ -12,7 +12,11 @@
 */
 
 pest()->extend(Tests\TestCase::class)
+<<<<<<< HEAD
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+=======
+  ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+>>>>>>> 16fa9bbf8c339cd545c2744ec8fb0940cda548da
     ->in('Feature');
 
 /*

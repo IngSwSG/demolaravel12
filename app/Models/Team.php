@@ -5,6 +5,7 @@ namespace App\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Team extends Model
 {
@@ -16,23 +17,24 @@ class Team extends Model
     public function add($users)
     {
 
-        $this->guardAgainstTooManyMembers();
+        $users = $users instanceof Collection ? $users : collect([$users]);
 
-        if ($users instanceof User) {
-            return $this->users()->save($users);
-        }
+        $this->guardAgainstTooManyMembers($users);
 
         $this->users()->saveMany($users);
     }
 
     public function users()
-    {
+    {   
         return $this->hasMany(User::class);
     }
 
-    protected function guardAgainstTooManyMembers()
+    protected function guardAgainstTooManyMembers($users)
     {
-        if ($this->users()->count() >= $this->size) {
+        $currentCount = $this->users()->count();
+        $toAdd = $users->count();
+
+        if ($currentCount + $toAdd > $this->size) {
             throw new Exception();
         }
     }

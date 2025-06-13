@@ -3,7 +3,7 @@
 use App\Models\Team;
 use App\Models\User;
 
-it('un equipo puede agrear usuarios', function(){
+it('un equipo puede agregar usuarios', function(){
     $team = Team::factory()->create();
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
@@ -38,4 +38,19 @@ it('un equipo puede agregar multiples usuarios a la vez', function(){
     $team->add($users);
 
     expect($team->users)->count()->toBe(3);
+});
+
+it('un equipo agrega más que el máximo', function(){
+    $team = Team::factory()->create(['size' => 3]);
+    $users = User::factory(2)->create();
+
+    $team->add($users);
+
+    expect($team->users)->count()->toBe(2);
+    
+    $this->expectException(Exception::class);
+
+    $users = User::factory(2)->create();
+    $team->add($users);
+   
 });

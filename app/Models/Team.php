@@ -12,14 +12,32 @@ class Team extends Model
     use HasFactory;
 
     protected $guarded = [];
-    
+    //Este fue el metodo original que contenia el error de agregar mas de un usuario a la vez.
+    // public function add($users)
+    // {
+
+    //     $this->guardAgainstTooManyMembers();
+
+    //     if ($users instanceof User) {
+    //         return $this->users()->save($users);
+    //     }
+
+    //     $this->users()->saveMany($users);
+    // }
+    //Metodo corregido para agregar un usuario o una colección de usuarios, asegurando que no se exceda el tamaño máximo del equipo.
     public function add($users)
     {
-
-        $this->guardAgainstTooManyMembers();
-
         if ($users instanceof User) {
+            $this->guardAgainstTooManyMembers();
             return $this->users()->save($users);
+        }
+
+        // Si es una colección o array de usuarios
+        $usersCount = is_countable($users) ? count($users) : $users->count();
+        $currentCount = $this->users()->count();
+
+        if ($currentCount + $usersCount > $this->size) {
+            throw new Exception();
         }
 
         $this->users()->saveMany($users);

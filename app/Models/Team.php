@@ -16,6 +16,18 @@ class Team extends Model
     public function add($users)
     {
 
+        if ($users instanceof User) {
+            $this->guardAgainstTooManyMembers();
+            return $this->users()->save($users);
+        }
+
+        foreach ($users as $user) {
+            $this->guardAgainstTooManyMembers();
+            $this->users()->save($user);
+        }
+
+        // codigo anterior
+        /*
         $this->guardAgainstTooManyMembers();
 
         if ($users instanceof User) {
@@ -23,6 +35,8 @@ class Team extends Model
         }
 
         $this->users()->saveMany($users);
+        */ 
+
     }
 
     public function users()

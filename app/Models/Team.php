@@ -5,22 +5,20 @@ namespace App\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class Team extends Model
 {
-    /** @use HasFactory<\Database\Factories\TeamFactory> */
     use HasFactory;
 
     protected $guarded = [];
-    
+
     public function add($users)
     {
 
-        $this->guardAgainstTooManyMembers();
+        $users = collect($users instanceof User ? [$users] : $users);
 
-        if ($users instanceof User) {
-            return $this->users()->save($users);
-        }
+        $this->guardAgainstTooManyMembers($users->count());
 
         $this->users()->saveMany($users);
     }
@@ -30,10 +28,10 @@ class Team extends Model
         return $this->hasMany(User::class);
     }
 
-    protected function guardAgainstTooManyMembers()
+    protected function guardAgainstTooManyMembers(int $adding = 1)
     {
-        if ($this->users()->count() >= $this->size) {
-            throw new Exception();
+        if ($this->users()->count() + $adding > $this->size) {
+            throw new Exception("El equipo ya alcanzó su tamaño máximo.");
         }
     }
 }

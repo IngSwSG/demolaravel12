@@ -13,16 +13,21 @@ class Team extends Model
 
     protected $guarded = [];
     
-    public function add($users)
+    public function add($users) //el error estaba en la funcion de add
     {
-
+    if ($users instanceof User) {
         $this->guardAgainstTooManyMembers();
+        return $this->users()->save($users);
+    }
 
-        if ($users instanceof User) {
-            return $this->users()->save($users);
-        }
+    $usersCount = is_countable($users) ? count($users) : $users->count();
+    $currentCount = $this->users()->count();
 
-        $this->users()->saveMany($users);
+    if ($currentCount + $usersCount > $this->size) {
+        throw new Exception();
+    }
+
+    $this->users()->saveMany($users);
     }
 
     public function users()

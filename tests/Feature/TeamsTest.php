@@ -39,3 +39,14 @@ it('un equipo puede agregar multiples usuarios a la vez', function(){
 
     expect($team->users)->count()->toBe(3);
 });
+
+it('lanza una excepción si se excede el tamaño al agregar múltiples usuarios', function () {
+    $team = Team::factory()->create(['size' => 3]);
+
+    $team->add(User::factory()->create());
+    $team->add(User::factory()->create());
+
+    $this->expectException(Exception::class);
+
+    $team->add(User::factory(2)->create());
+});

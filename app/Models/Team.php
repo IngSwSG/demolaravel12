@@ -12,11 +12,12 @@ class Team extends Model
     use HasFactory;
 
     protected $guarded = [];
-    
+
     public function add($users)
     {
 
-        $this->guardAgainstTooManyMembers();
+        $count = $users instanceof User ? 1 : collect($users)->count();
+        $this->guardAgainstTooManyMembers($count);
 
         if ($users instanceof User) {
             return $this->users()->save($users);
@@ -30,9 +31,11 @@ class Team extends Model
         return $this->hasMany(User::class);
     }
 
-    protected function guardAgainstTooManyMembers()
+    protected function guardAgainstTooManyMembers($newMembersCount = 1)
     {
-        if ($this->users()->count() >= $this->size) {
+    $current = $this->users()->count();
+
+        if ($current + $newMembersCount > $this->size) {
             throw new Exception();
         }
     }

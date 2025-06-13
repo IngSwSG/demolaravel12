@@ -13,17 +13,23 @@ class Team extends Model
 
     protected $guarded = [];
     
-    public function add($users)
-    {
-
+   public function add($users)
+{
+    if ($users instanceof User) {
         $this->guardAgainstTooManyMembers();
-
-        if ($users instanceof User) {
-            return $this->users()->save($users);
-        }
-
-        $this->users()->saveMany($users);
+        return $this->users()->save($users);
     }
+
+
+    $usersCount = is_countable($users) ? count($users) : $users->count();
+    $currentCount = $this->users()->count();
+
+    if ($currentCount + $usersCount > $this->size) {
+        throw new Exception();
+    }
+
+    $this->users()->saveMany($users);
+}
 
     public function users()
     {
@@ -36,4 +42,5 @@ class Team extends Model
             throw new Exception();
         }
     }
+    
 }

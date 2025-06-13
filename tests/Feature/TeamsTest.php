@@ -39,3 +39,13 @@ it('un equipo puede agregar multiples usuarios a la vez', function(){
 
     expect($team->users)->count()->toBe(3);
 });
+
+it( function () {
+    $team = \App\Models\Team::factory()->create(['size' => 2]);
+    $user1 = \App\Models\User::factory()->create();
+    $team->add($user1); 
+
+    $users = \App\Models\User::factory(2)->create();
+
+    expect(fn() => $team->add($users))->toThrow(Exception::class);
+});

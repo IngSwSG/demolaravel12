@@ -15,11 +15,15 @@ class Team extends Model
     
     public function add($users)
     {
-
-        $this->guardAgainstTooManyMembers();
-
         if ($users instanceof User) {
+            if ($this->users()->count() >= $this->size) {
+                throw new Exception();
+            }
             return $this->users()->save($users);
+        }
+
+        if ($this->users()->count() + count($users) > $this->size) {
+            throw new Exception();
         }
 
         $this->users()->saveMany($users);

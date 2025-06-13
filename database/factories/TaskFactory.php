@@ -19,6 +19,7 @@ class TaskFactory extends Factory
         return [
             'name' => $this->faker->word(),
             'user_id' => \App\Models\User::factory(),
+            'status' => $this->faker->randomElement(['to do', 'in progress', 'finished']),
         ];
     }
 }

@@ -12,11 +12,11 @@ class Team extends Model
     use HasFactory;
 
     protected $guarded = [];
-    
+
     public function add($users)
     {
 
-        $this->guardAgainstTooManyMembers();
+        $this->guardAgainstTooManyMembers($users);
 
         if ($users instanceof User) {
             return $this->users()->save($users);
@@ -30,10 +30,20 @@ class Team extends Model
         return $this->hasMany(User::class);
     }
 
-    protected function guardAgainstTooManyMembers()
-    {
-        if ($this->users()->count() >= $this->size) {
-            throw new Exception();
-        }
+protected function guardAgainstTooManyMembers($users)
+{
+    $currentCount = $this->users()->count();
+    $size = $this->size;
+
+    if ($users instanceof User) {
+        $newUsersCount = 1;
+    } else {
+        $newUsersCount = count($users);
     }
+
+    if ($currentCount + $newUsersCount > $size) {
+        throw new Exception('El equipo excede el tamaño máximo permitido.');
+    }
+}
+    
 }

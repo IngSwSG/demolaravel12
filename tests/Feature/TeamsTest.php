@@ -110,5 +110,5 @@ it('no puede agregar múltiples usuarios si excede el límite', function(){
     
     expect(fn() => $team->add($users))->toThrow(Exception::class);
     expect($team->fresh()->users)->count()->toBe(0);
-    //PRUEBA
+    //PRUEBA 2
 });

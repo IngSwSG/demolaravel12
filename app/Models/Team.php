@@ -15,8 +15,13 @@ class Team extends Model
     
     public function add($users)
     {
+        $numberOfActualUsers = $this->users()->count();
+        $numberOfNewUsers = is_array($users) ? count($users) : 1;
+        $totalUsers = $numberOfActualUsers + $numberOfNewUsers;
+        if ($totalUsers > $this->size) {
+            throw new Exception('El equipo ha alcanzado su tamaño máximo.');
+        }
 
-        $this->guardAgainstTooManyMembers();
 
         if ($users instanceof User) {
             return $this->users()->save($users);

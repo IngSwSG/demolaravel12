@@ -49,7 +49,7 @@ class TaskController extends Controller
 
     public function show(Task $task)
     {
-       
+        $task->load('user');
         return view('tasks.show', compact('task'));
     }
 
@@ -67,8 +67,10 @@ class TaskController extends Controller
        
         $request->validate([
             'name' => 'required|string|max:255',
+            'status' => 'required|in:' . implode(',', [Task::STATUS_TODO, Task::STATUS_IN_PROGRESS, Task::STATUS_FINISHED]),
         ]);
         $task->name = $request->name;
+        $task->status = $request->status;
         $task->save();
    
         return redirect()->route('tasks.index');
@@ -80,4 +82,17 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('tasks.index');
     }
+
+    public function updateStatus(Request $request, Task $task)
+    {
+        $request->validate([
+            'status' => 'required|in:' . implode(',', [Task::STATUS_TODO, Task::STATUS_IN_PROGRESS, Task::STATUS_FINISHED]),
+        ]);
+
+        $task->status = $request->status;
+        $task->save();
+
+        return redirect()->route('tasks.index');
+    }
+    
 }

@@ -28,10 +28,12 @@ class DatabaseSeeder extends Seeder
 
         Task::factory(5)->create([
             'user_id' => $user1->id, // Assign tasks to the first user created
+            'status' => fn() => fake()->randomElement(['to do', 'in progress', 'finished']),
         ]);
 
         Task::factory(15)->create([
             'user_id' => $user2->id, // Assign tasks to the second user created
+            'status' => fn() => fake()->randomElement(['to do', 'in progress', 'finished']),
         ]);
     }
 }

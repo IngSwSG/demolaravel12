@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Post;
+
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -33,5 +35,10 @@ class DatabaseSeeder extends Seeder
         Task::factory(15)->create([
             'user_id' => $user2->id, // Assign tasks to the second user created
         ]);
+
+
+        $user = User::factory()->create();
+        $post = Post::factory()->create();
+        $post->like();
     }
 }

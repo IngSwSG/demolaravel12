@@ -27,8 +27,6 @@ it('un equipo puede tener un tamaño maximo', function(){
     $this->expectException(Exception::class);
     $user3 = User::factory()->create();
     $team->add($user3);
-
-
 });
 
 it('un equipo puede agregar multiples usuarios a la vez', function(){
@@ -39,3 +37,28 @@ it('un equipo puede agregar multiples usuarios a la vez', function(){
 
     expect($team->users)->count()->toBe(3);
 });
+
+it('falla al validar correctamente el tamaño si se agregan múltiples usuarios (regresión)', function () {
+    $team = Team::factory()->create(['size' => 3]);
+
+    $team->users()->saveMany(User::factory(2)->create());
+
+    $this->expectException(Exception::class);
+
+    
+    $team->guardAgainstTooManyMembers(); 
+
+    
+});
+
+it('lanza excepción si al agregar múltiples usuarios se supera el tamaño del equipo', function () {
+    $team = Team::factory()->create(['size' => 2]);
+    
+    $team->users()->save(User::factory()->create());
+
+
+    $this->expectException(Exception::class);
+
+    $team->add(User::factory(2)->create()); 
+});
+

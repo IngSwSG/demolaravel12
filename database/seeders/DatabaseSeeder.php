@@ -33,5 +33,9 @@ class DatabaseSeeder extends Seeder
         Task::factory(15)->create([
             'user_id' => $user2->id, // Assign tasks to the second user created
         ]);
+
+         $this->call([
+        LikeSeeder::class,
+    ]);
     }
 }

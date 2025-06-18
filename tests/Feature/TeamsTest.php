@@ -3,7 +3,7 @@
 use App\Models\Team;
 use App\Models\User;
 
-it('un equipo puede agrear usuarios', function(){
+it('un equipo puede agrear usuarios', function () {
     $team = Team::factory()->create();
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
@@ -14,11 +14,11 @@ it('un equipo puede agrear usuarios', function(){
     expect($team->users)->count()->toBe(2);
 });
 
-it('un equipo puede tener un tamaño maximo', function(){
+it('un equipo puede tener un tamaño maximo', function () {
     $team = Team::factory()->create(['size' => 2]);
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
-    
+
     $team->add($user1);
     $team->add($user2);
 
@@ -31,11 +31,18 @@ it('un equipo puede tener un tamaño maximo', function(){
 
 });
 
-it('un equipo puede agregar multiples usuarios a la vez', function(){
+it('un equipo puede agregar multiples usuarios a la vez', function () {
     $team = Team::factory()->create(['size' => 3]);
     $users = User::factory(3)->create();
 
     $team->add($users);
 
     expect($team->users)->count()->toBe(3);
+});
+
+it('un equipo no puede tener más usuarios de los que soporta', function () {
+    $team = Team::factory()->create(['size' => 2]);
+    $users = User::factory(5)->create();
+
+    expect(fn() => $team->add($users))->toThrow(Exception::class, "El equipo no puede tener más de 2 miembros.");
 });
